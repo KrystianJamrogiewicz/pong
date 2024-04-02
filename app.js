@@ -3,7 +3,6 @@ const ctx = canvas.getContext("2d");
 
 canvas.width = 1000;
 canvas.height = 500;
-let ballSize = 20;
 
 const cw = canvas.width;
 const ch = canvas.height;
@@ -26,13 +25,13 @@ const table = {
 		}
 	},
 };
-
+let size = 20;
 const ball = {
-	size: ballSize,
-	x: cw / 2 - ballSize / 2,
-	y: ch / 2 - ballSize / 2,
-	speedX: -0.5, // Zmiana połorzenia piłki
-	speedY: 0.3,
+	size: size,
+	x: cw / 2 - size / 2,
+	y: ch / 2 - size / 2,
+	speedX: -3, // Zmiana połorzenia piłki
+	speedY: 1,
 
 	ball: () => {
 		ctx.fillStyle = "#ffff";
@@ -40,6 +39,9 @@ const ball = {
 		// Zmiana pozycji piłki (ruch)
 		ball.x += ball.speedX;
 		ball.y += ball.speedY;
+		// Odbijanie od ścian (przeciwny zwrot prędkości)
+		if (ball.x <= 0 || ball.x >= cw - ball.size) ball.speedX = -ball.speedX;
+		if (ball.y <= 0 || ball.y >= ch - ball.size) ball.speedY = -ball.speedY;
 	},
 };
 
