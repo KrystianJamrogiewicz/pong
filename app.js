@@ -1,23 +1,27 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
+// Wymiary pola Canvas - pola gry
 canvas.width = 1000;
 canvas.height = 500;
 
-const cw = canvas.width;
-const ch = canvas.height;
-
 const table = {
+	height: canvas.height,
+	width: canvas.width,
 	lineWidth: 6, //szerokosć linii środkowej
 	lineHeight: 16, //wysokosć linii środkowej
 	table: () => {
 		ctx.fillStyle = "black"; // Wybór koloru
-		ctx.fillRect(0, 0, cw, ch); // Rysuje prostokąt (współżędne początkowe x, y, odległość x, y)
-
-		for (let linePosition = 20; linePosition < ch; linePosition += 30) {
+		ctx.fillRect(0, 0, table.width, table.height); // Rysuje prostokąt (współżędne początkowe x, y, odległość x, y)
+		// Rysuje przerywanąlinie na środku stołu
+		for (
+			let linePosition = 20;
+			linePosition < table.height;
+			linePosition += 30
+		) {
 			ctx.fillStyle = "gray";
 			ctx.fillRect(
-				cw / 2 - table.lineWidth / 2,
+				table.width / 2 - table.lineWidth / 2,
 				linePosition,
 				table.lineWidth,
 				table.lineHeight
@@ -28,8 +32,8 @@ const table = {
 let size = 20;
 const ball = {
 	size: size,
-	x: cw / 2 - size / 2,
-	y: ch / 2 - size / 2,
+	x: table.width / 2 - size / 2,
+	y: table.height / 2 - size / 2,
 	speedX: -3, // Zmiana połorzenia piłki
 	speedY: 1,
 
@@ -40,8 +44,10 @@ const ball = {
 		ball.x += ball.speedX;
 		ball.y += ball.speedY;
 		// Odbijanie od ścian (przeciwny zwrot prędkości)
-		if (ball.x <= 0 || ball.x >= cw - ball.size) ball.speedX = -ball.speedX;
-		if (ball.y <= 0 || ball.y >= ch - ball.size) ball.speedY = -ball.speedY;
+		if (ball.x <= 0 || ball.x >= table.width - ball.size)
+			ball.speedX = -ball.speedX;
+		if (ball.y <= 0 || ball.y >= table.height - ball.size)
+			ball.speedY = -ball.speedY;
 	},
 };
 
@@ -58,6 +64,15 @@ const playerPaddle = {
 			playerPaddle.width,
 			playerPaddle.height
 		);
+		// Poruszanie paletką
+		canvas.addEventListener("mousemove", event => {
+			// Kod do wykonania w reakcji na ruch myszy na elemencie canvas (pole gry)
+			let mauseY = event.clientY - canvas.offsetTop - playerPaddle.height / 2; // Odczyt osi Y z myszki skoregowany o położenie elementu (górna krawędź elementu = 0)
+			if (mauseY <= 0) mauseY = 0;
+			if (mauseY >= 400) mauseY = 400;
+			playerPaddle.y = mauseY;
+			console.log(playerPaddle.y);
+		});
 	},
 };
 
