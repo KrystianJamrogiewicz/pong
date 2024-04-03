@@ -15,3 +15,29 @@ canvas {
 	/*określamy obramowania canvas*/
 	border: 3px solid #fff;
 }
+
+#score {
+	position: fixed;
+	top: 10px;
+	width: 100%;
+	padding: 10px;
+	display: flex;
+}
+#player-score {
+	flex: 1;
+	padding: 10px;
+	justify-content: center;
+	display: flex;
+	justify-content: center; /* Wyśrodkowanie w poziomie */
+	align-items: center; /* Wyśrodkowanie w pionie */
+	font-size: 40px;
+}
+
+#ai-score {
+	flex: 1;
+	padding: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 40px;
+}

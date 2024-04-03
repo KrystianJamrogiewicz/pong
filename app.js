@@ -1,5 +1,7 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
+const playerScore = document.querySelector("#player-score");
+const aiScore = document.querySelector("#ai-score");
 
 // Wymiary pola Canvas - pola gry
 canvas.width = 1000;
@@ -34,8 +36,9 @@ const ball = {
 	size: size,
 	x: table.width / 2 - size / 2,
 	y: table.height / 2 - size / 2,
-	speedX: -3, // Zmiana połorzenia piłki
-	speedY: 1,
+	// Zmiana połorzenia piłki
+	speedX: 2,
+	speedY: Math.floor(Math.random() * (3 - 1 + 1)) + 1,
 
 	ball: () => {
 		// Kolor piłki
@@ -48,10 +51,28 @@ const ball = {
 		ball.y += ball.speedY;
 
 		// Odbijanie od ścian (przeciwny zwrot prędkości)
-		if (ball.x <= 0 || ball.x >= table.width - ball.size)
-			(ball.speedX = -ball.speedX), ball.speedUp();
-		if (ball.y <= 0 || ball.y >= table.height - ball.size) {
+		if (ball.x <= 0) (ball.speedX = -ball.speedX), (aiPaddle.score += 1);
+		else if (ball.x >= table.width - ball.size)
+			(ball.speedX = -ball.speedX), (playerPaddle.score += 1);
+		else if (ball.y <= 0 || ball.y >= table.height - ball.size)
 			(ball.speedY = -ball.speedY), ball.speedUp();
+		// Odbicie od paletki gracza
+		else if (
+			ball.x <= playerPaddle.x + playerPaddle.width &&
+			ball.y + ball.size / 2 >= playerPaddle.y &&
+			ball.y + ball.size / 2 <= playerPaddle.y + playerPaddle.height
+		) {
+			ball.speedX = -ball.speedX;
+			ball.speedUp();
+		}
+		// Odbicie od paletki AI
+		else if (
+			ball.x >= aiPaddle.x - aiPaddle.width &&
+			ball.y + ball.size / 2 >= aiPaddle.y &&
+			ball.y + ball.size / 2 <= aiPaddle.y + aiPaddle.height
+		) {
+			ball.speedX = -ball.speedX;
+			ball.speedUp();
 		}
 	},
 	// Przyśpieszenie piłki
@@ -68,13 +89,15 @@ const playerPaddle = {
 	width: 20,
 	x: 70,
 	y: 200,
+	score: 0,
 	player: () => {
 		ctx.fillStyle = "#7FFF00";
 		ctx.fillRect(
 			playerPaddle.x,
 			playerPaddle.y,
 			playerPaddle.width,
-			playerPaddle.height
+			playerPaddle.height,
+			(playerScore.innerText = playerPaddle.score)
 		);
 		// Poruszanie paletką
 		canvas.addEventListener("mousemove", event => {
@@ -92,10 +115,11 @@ const aiPaddle = {
 	width: 20,
 	x: 910,
 	y: 200,
-
+	score: 0,
 	ai: () => {
 		ctx.fillStyle = "yellow"; // wybór koloru
 		ctx.fillRect(aiPaddle.x, aiPaddle.y, aiPaddle.width, aiPaddle.height);
+		aiScore.innerText = aiPaddle.score;
 
 		// Poruszanie paletką
 		let aiCenterY = aiPaddle.y + aiPaddle.height / 2;
@@ -103,15 +127,14 @@ const aiPaddle = {
 		if (ball.x > 500) {
 			if (aiCenterY - ballCenterY > 200) aiPaddle.y -= 25;
 			else if (aiCenterY - ballCenterY < -200) aiPaddle.y += 25;
-			else if (aiCenterY - ballCenterY > 40) aiPaddle.y -= 10;
-			else if (aiCenterY - ballCenterY < -40) aiPaddle.y += 10;
+			else if (aiCenterY - ballCenterY > 30) aiPaddle.y -= 15;
+			else if (aiCenterY - ballCenterY < -30) aiPaddle.y += 15;
 		} else if (ball.x > 150 && ball.x <= 500) {
 			if (aiCenterY - ballCenterY > 100) aiPaddle.y -= 2;
 			else if (aiCenterY - ballCenterY < -100) aiPaddle.y += 2;
 		}
 		if (aiPaddle.y >= 400) aiPaddle.y = 400;
 		else if (aiPaddle.y <= 0) aiPaddle.y = 0;
-		console.log(aiPaddle.y);
 	},
 };
 
