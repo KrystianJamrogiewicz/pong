@@ -38,16 +38,28 @@ const ball = {
 	speedY: 1,
 
 	ball: () => {
+		// Kolor piłki
 		ctx.fillStyle = "#ffff";
+		// Narysowanie piłki
 		ctx.fillRect(ball.x, ball.y, ball.size, ball.size);
+
 		// Zmiana pozycji piłki (ruch)
 		ball.x += ball.speedX;
 		ball.y += ball.speedY;
+
 		// Odbijanie od ścian (przeciwny zwrot prędkości)
 		if (ball.x <= 0 || ball.x >= table.width - ball.size)
-			ball.speedX = -ball.speedX;
-		if (ball.y <= 0 || ball.y >= table.height - ball.size)
-			ball.speedY = -ball.speedY;
+			(ball.speedX = -ball.speedX), ball.speedUp();
+		if (ball.y <= 0 || ball.y >= table.height - ball.size) {
+			(ball.speedY = -ball.speedY), ball.speedUp();
+		}
+	},
+	// Przyśpieszenie piłki
+	speedUp: () => {
+		if (ball.speedX > 0 && ball.speedX < 16) ball.speedX += 0.2;
+		else if (ball.speedX < 0 && ball.speedX > -16) ball.speedX -= 0.2;
+		if (ball.speedY > 0 && ball.speedY < 16) ball.speedY += 0.2;
+		else if (ball.speedY < 0 && ball.speedY > -16) ball.speedY -= 0.2;
 	},
 };
 
@@ -69,9 +81,8 @@ const playerPaddle = {
 			// Kod do wykonania w reakcji na ruch myszy na elemencie canvas (pole gry)
 			let mauseY = event.clientY - canvas.offsetTop - playerPaddle.height / 2; // Odczyt osi Y z myszki skoregowany o położenie elementu (górna krawędź elementu = 0)
 			if (mauseY <= 0) mauseY = 0;
-			if (mauseY >= 400) mauseY = 400;
+			else if (mauseY >= 400) mauseY = 400;
 			playerPaddle.y = mauseY;
-			console.log(playerPaddle.y);
 		});
 	},
 };
@@ -81,9 +92,26 @@ const aiPaddle = {
 	width: 20,
 	x: 910,
 	y: 200,
+
 	ai: () => {
 		ctx.fillStyle = "yellow"; // wybór koloru
 		ctx.fillRect(aiPaddle.x, aiPaddle.y, aiPaddle.width, aiPaddle.height);
+
+		// Poruszanie paletką
+		let aiCenterY = aiPaddle.y + aiPaddle.height / 2;
+		let ballCenterY = ball.y + ball.size / 2;
+		if (ball.x > 500) {
+			if (aiCenterY - ballCenterY > 200) aiPaddle.y -= 25;
+			else if (aiCenterY - ballCenterY < -200) aiPaddle.y += 25;
+			else if (aiCenterY - ballCenterY > 40) aiPaddle.y -= 10;
+			else if (aiCenterY - ballCenterY < -40) aiPaddle.y += 10;
+		} else if (ball.x > 150 && ball.x <= 500) {
+			if (aiCenterY - ballCenterY > 100) aiPaddle.y -= 2;
+			else if (aiCenterY - ballCenterY < -100) aiPaddle.y += 2;
+		}
+		if (aiPaddle.y >= 400) aiPaddle.y = 400;
+		else if (aiPaddle.y <= 0) aiPaddle.y = 0;
+		console.log(aiPaddle.y);
 	},
 };
 
