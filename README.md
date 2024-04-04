@@ -1,5 +1,5 @@
 # pongGame
-Gra typu Pong wykonana w technologii: JavaScript (Canvas), HTML, CSS.
+Gra typu Pong wykonana w technologii: JavaScript, HTML (Canvas), CSS.
 
 Założenia:
 - Poruszanie paletki za pomocą myszki (tylko po polu gry)
