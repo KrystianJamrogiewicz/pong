@@ -2,7 +2,7 @@
 Pong-like game made with: JavaScript, HTML (Canvas), CSS
 
 
-![2024-04-25_22h22_43](https://github.com/KrystianJamrogiewicz/pongGame/assets/155767356/fb61a2a1-d143-43a5-9812-2dca9b3e78b9)
+<p align="center"> <img src="https://github.com/KrystianJamrogiewicz/pongGame/assets/155767356/fb61a2a1-d143-43a5-9812-2dca9b3e78b9"> </p>
 
 
 Features:
